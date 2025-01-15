@@ -1,0 +1,1 @@
+Projeto referente a criação de um processador usando Verilog baseado na arquitetura x86.
