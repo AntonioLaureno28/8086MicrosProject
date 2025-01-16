@@ -1,7 +1,7 @@
 module UC (
     input clock, reset,
     input [7:0] IR,
-    output reg ir_load, reg_load
+    output reg ir_load, reg_load,
     output reg alu_op
 );
     reg[7:0] current_state, next_state;
@@ -140,7 +140,7 @@ module UC (
             CMP: begin
                 ir_load = 0;
                 reg_load = 1;
-                alu_op = //; 
+                alu_op = 8'b00001101; 
             end
 
             AND: begin
@@ -195,13 +195,13 @@ module UC (
             SHIFT_LEFT: begin
                 ir_load = 0;
                 reg_load = 1;
-                alu_op = //; 
+                alu_op = 8'b00001011; 
             end
 
             SHIFT_RIGHT: begin
                 ir_load = 0;
                 reg_load = 1;
-                alu_op = //; 
+                alu_op = 8'b00001100; 
             end
 
 
