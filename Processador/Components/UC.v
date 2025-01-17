@@ -1,211 +1,96 @@
 module UC (
     input clock, reset,
     input [7:0] IR,
-    output reg ir_load, reg_load,
-    output reg alu_op
+    output reg ir_load, reg_load_a, reg_load_b,
+    output reg [7:0] alu_op
 );
-    reg[7:0] current_state, next_state;
-    parameter START = 8'd0,
-              FETCH = 8'd1,
-              DECODE = 8'd2,
-              LOAD = 8'd3, STORE = 8'd4,
-              ADD = 8'd5, SUB = 8'd6, MULT = 8'd7, DIV = 8'd8,
-              MOD = 8'd9,
-              CMP = 8'd10,
-              AND = 8'd11, OR = 8'd12, NOT = 8'd13, XOR = 8'd14,
-              NAND = 8'd15, NOR = 8'd16, XNOR = 8'd17,
-              MOV = 8'd18,
-              SHIFT_LEFT = 8'd19, SHIFT_RIGHT = 8'd20,
-              
+    reg [7:0] current_state, next_state;
 
-     always @ (posedge clock or negedge reset) begin: state_memory
+    parameter START = 8'd0, FETCH = 8'd1, DECODE = 8'd2,
+              ADD = 8'd3, SUB = 8'd4, MUL = 8'd5, DIV = 8'd6, //MOD = 8'd7,
+              AND = 8'd8, OR = 8'd9, XOR = 8'd10, NOT = 8'd11,
+              NAND = 8'd12, NOR = 8'd13, XNOR = 8'd14,
+              SHIFT_LEFT = 8'd21, SHIFT_RIGHT = 8'd22,
+              CMP = 8'd16, MOV = 8'd17, JMP = 8'd18, CALL = 8'd19, 
+              RET = 8'd20, GOTO = 8'd25, JZ = 8'd23, JNZ = 8'd24;
+
+    always @(posedge clock or negedge reset) begin
         if (!reset)
             current_state <= START;
         else
             current_state <= next_state;
-     end
+    end
 
-     always @ (current_state, IR) begin: logica_next_state
-        case(current_state)
+   
+    always @(current_state, IR) begin
+        case (current_state)
             START: next_state = FETCH;
             FETCH: next_state = DECODE;
 
-            DECODE: if (IR == LOAD) next_state = LOAD;
-                    else if (IR == STORE) next_state = STORE;
-                    else if (IR == ADD) next_state = ADD;
-                    else if (IR == SUB) next_state = SUB;
-                    else if (IR == MULT) next_state = MULT;
-                    else if (IR == DIV) next_state = DIV;
-                    else if (IR == MOD) next_state = MOD;
-                    else if (IR == CMP) next_state = CMP;
-                    else if (IR == AND) next_state = AND;
-                    else if (IR == OR) next_state = OR;
-                    else if (IR == NOT) next_state = NOT;
-                    else if (IR == XOR) next_state = XOR;
-                    else if (IR == NAND) next_state = NAND;
-                    else if (IR == NOR) next_state = NOR;
-                    else if (IR == XNOR) next_state = XNOR;
-                    else if (IR == MOV) next_state = MOV;
-                    else if (IR == SHIFT_LEFT) next_state = SHIFT_LEFT;
-                    else if (IR == SHIFT_RIGHT) next_state = SHIFT_RIGHT;
-                
+            DECODE:
+                case (IR)
+                    8'b00000001: next_state = ADD;
+                    8'b00000010: next_state = SUB;
+                    8'b00000011: next_state = MUL;
+                    8'b00000100: next_state = DIV;
+                    //8'b00000101: next_state = MOD;
+                    8'b01110101: next_state = AND;
+                    8'b01110110: next_state = OR;
+                    8'b01110111: next_state = XOR;
+                    8'b01111000: next_state = NOT;
+                    8'b01111001: next_state = NAND;
+                    8'b01111010: next_state = NOR;
+                    8'b01111011: next_state = XNOR;
+                    8'b00111100: next_state = SHIFT_LEFT;
+                    8'b00111101: next_state = SHIFT_RIGHT;
+                    8'b00011111: next_state = CMP;
+                    8'b10000000: next_state = MOV;
+                    8'b10000001: next_state = JMP;
+                    8'b10000010: next_state = CALL;
+                    8'b10000011: next_state = RET;
+                    8'b10000100: next_state = GOTO;
+                    8'b10000101: next_state = JZ;
+                    8'b10000111: next_state = JNZ;
+                    default: next_state = START;
+                endcase
+
             
-            LOAD: next_state = FETCH; 
-            STORE: next_state = FETCH;
-            ADD: next_state = FETCH;
-            SUB: next_state = FETCH;
-            MULT: next_state = FETCH;
-            DIV: next_state = FETCH;
-            MOD: next_state = FETCH;
-            CMP: next_state = FETCH;
-            AND: next_state = FETCH;
-            OR: next_state = FETCH;
-            NOT: next_state = FETCH;
-            XOR: next_state = FETCH;
-            NAND: next_state = FETCH;
-            NOR: next_state = FETCH;
-            XNOR: next_state = FETCH;
-            SHIFT_LEFT: next_state = FETCH;
-            SHIFT_RIGHT: next_state = FETCH;
-            MOV: next_state = FETCH;
-
-            default: next_state = START;
-
-
+            default: next_state = FETCH;
         endcase
-     end
+    end
 
-    always @(current_state) begin: logica_saida
+ 
+    always @(current_state) begin
+        ir_load = 0;
+        reg_load_a = 0;
+        reg_load_b = 0;
+        alu_op = 8'b0;
+
         case (current_state)
-            START: begin
-                ir_load = 0;
-                reg_load = 0;
-                alu_op = 8'b0;
+            FETCH: ir_load = 1;
+
+            ADD, SUB, MUL, DIV, /*MOD,*/ AND, OR, XOR, NAND, NOR, XNOR, CMP, SHIFT_LEFT, SHIFT_RIGHT: begin
+                reg_load_a = 1;  
+                reg_load_b = 1; 
+                case (current_state)
+                    ADD: alu_op = 8'b00000001;
+                    SUB: alu_op = 8'b00000010;
+                    MUL: alu_op = 8'b00000011;
+                    DIV: alu_op = 8'b00000100;
+                    //MOD: alu_op = 8'b00000101;
+                    AND: alu_op = 8'b00000110;
+                    OR: alu_op = 8'b00000111;
+                    XOR: alu_op = 8'b00001000;
+                    NAND: alu_op = 8'b00001001;
+                    NOR: alu_op = 8'b00001010;
+                    XNOR: alu_op = 8'b00001011;
+                    CMP: alu_op = 8'b00001100;
+                    SHIFT_LEFT: alu_op = 8'b00001101;
+                    SHIFT_RIGHT: alu_op = 8'b00001110;
+                endcase
             end
 
-            FETCH: begin
-                ir_load = 1;
-                reg_load = 0; 
-                alu_op = 8'b0;
-            end
-
-            DECODE: begin
-                ir_load = 0;
-                reg_load = 0;
-                alu_op = 8'b0;
-            end
-
-            LOAD: begin
-                ir_load = 0;
-                reg_load = 1;
-                alu_op = 8'b0;
-            end
-
-            STORE: begin
-                ir_load = 0;
-                reg_load = 0;
-                alu_op = 8'b0;
-            end
-
-            ADD: begin
-                ir_load = 0;
-                reg_load = 1;
-                alu_op = 8'b00000001; 
-            end
-
-            SUB: begin
-                ir_load = 0;
-                reg_load = 1;
-                alu_op =  8'b00000010; 
-            end
-
-            MULT: begin
-                ir_load = 0;
-                reg_load = 1;
-                alu_op =  8'b00000011; 
-            end
-
-            DIV: begin
-                ir_load = 0;
-                reg_load = 1;
-                alu_op = //; 
-            end
-
-            MOD: begin
-                ir_load = 0;
-                reg_load = 1;
-                alu_op = //; 
-            end
-
-            CMP: begin
-                ir_load = 0;
-                reg_load = 1;
-                alu_op = 8'b00001101; 
-            end
-
-            AND: begin
-                ir_load = 0;
-                reg_load = 1;
-                alu_op = 8'b00000100; 
-            end
-
-            OR: begin
-                ir_load = 0;
-                reg_load = 1;
-                alu_op = 8'b00000101; 
-            end
-
-            XOR: begin
-                ir_load = 0;
-                reg_load = 1;
-                alu_op = 8'b00000110; 
-            end
-
-            NOT: begin
-                ir_load = 0;
-                reg_load = 1;
-                alu_op =  8'b00000111; 
-            end
-
-            NAND: begin
-                ir_load = 0;
-                reg_load = 1;
-                alu_op = 8'b00001000; 
-            end
-
-            NOR: begin
-                ir_load = 0;
-                reg_load = 1;
-                alu_op = 8'b00001001; 
-            end
-
-            XNOR: begin
-                ir_load = 0;
-                reg_load = 1;
-                alu_op = 8'b00001010; 
-            end
-
-            MOV: begin
-                ir_load = 0;
-                reg_load = 1;
-                alu_op = 8'b0;
-                
-            end
-
-            SHIFT_LEFT: begin
-                ir_load = 0;
-                reg_load = 1;
-                alu_op = 8'b00001011; 
-            end
-
-            SHIFT_RIGHT: begin
-                ir_load = 0;
-                reg_load = 1;
-                alu_op = 8'b00001100; 
-            end
-
-
+            MOV: reg_load_a = 1; 
         endcase
-     end
-
+    end
 endmodule
