@@ -1,5 +1,3 @@
-// Division 8bit
-
 module divider8bits(dividend,divisor,quo,rem);
   
   input [7:0] dividend;
@@ -60,3 +58,5 @@ module divider8bits(dividend,divisor,quo,rem);
     end
   end
 endmodule
+
+
