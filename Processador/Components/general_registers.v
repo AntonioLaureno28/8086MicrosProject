@@ -6,9 +6,11 @@ module x86_register_file (
     input logic [2:0] read_addr1,  // Endereço do primeiro registrador para leitura
     input logic [2:0] read_addr2,  // Endereço do segundo registrador para leitura
   	input logic [2:0] read_addr3,  // Endereço do terceiro registrador para leitura
-  	input logic [2:0] write_addr,  // Endereço do registrador para escrita
-    input logic [7:0] write_data,  // Dados a serem escritos
-    input logic write_enable,      // Habilitação de escrita
+  	//input logic [2:0] write_addr,  // Endereço do registrador para escrita
+    input logic [7:0] write_data1,  // Dados a serem escritos
+    input logic [7:0] write_data2,
+    input logic [7:0] write_data3,
+    input logic we1, we2, we3,      // Habilitação de escrita
     output logic [7:0] read_data1, // Dados lidos do registrador 1
   	output logic [7:0] read_data2,  // Dados lidos do registrador 2
   	output logic [7:0] read_data3  // Dados lidos do registrador 3
@@ -25,8 +27,14 @@ module x86_register_file (
             registers[2] <= 8'b0; // CX
             registers[3] <= 8'b0; // DX
         end 
-      	else if (write_enable) begin   
-          registers[write_addr] <= write_data;
+      	else if (we1) begin   
+          registers[0] <= write_data1;
+        end
+        else if (we2) begin   
+          registers[1] <= write_data2;
+        end
+        else if (we3) begin   
+          registers[2] <= write_data3;
         end
     end
 
