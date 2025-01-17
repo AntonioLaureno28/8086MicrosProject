@@ -8,7 +8,7 @@
 
 
 
-module ALU ( input wire [7:0]A, input wire [7:0]B, input wire [7:0]Selector,
+module ALU #(parameter A = 8'b1, B = 8'b1)( input wire [7:0]A, input wire [7:0]B, input wire [7:0]Selector,
             input wire clk, output reg [7:0]X, output reg [7:0]Flags );
   wire [7:0] add_X, sub_X, shift_left_X, shift_right_X;
   wire [15:0] mult_X;
@@ -60,7 +60,7 @@ module ALU ( input wire [7:0]A, input wire [7:0]B, input wire [7:0]Selector,
         Flags[5] <= 0;
         Flags[6] <= (result[15:8] != 0) ? 1 : 0;
       end
-      8'b000000100: begin // Operação de Divisão
+      8'b00000100: begin // Operação de Divisão
         result <= div_quo;
         Flags[0] <= ( result == 0 ) ? 1 : 0 ;
         Flags[1] <= 0;
@@ -70,63 +70,63 @@ module ALU ( input wire [7:0]A, input wire [7:0]B, input wire [7:0]Selector,
         Flags[5] <= 0;
         Flags[6] <= 0;
       end
-      8'b00000100: begin // Operação AND
+      8'b00000101: begin // Operação AND
         result <= A & B;
         Flags[0] <= ( result == 0 ) ? 1 : 0 ;
         Flags[2] <= result[7];
         Flags[3] <= ~^(result);
       end
-      8'b00000101: begin // Operação OR
+      8'b00000110: begin // Operação OR
         result <= A | B;
         Flags[0] <= ( result == 0 ) ? 1 : 0 ;
         Flags[2] <= result[7];
         Flags[3] <= ~^(result);
       end
-      8'b00000110: begin // Operação XOR
+      8'b00000111: begin // Operação XOR
         result <= A ^ B; 
         Flags[0] <= ( result == 0 ) ? 1 : 0 ;
         Flags[2] <= result[7];
         Flags[3] <= ~^(result);
       end
-      8'b00000111: begin // Operação NOT
+      8'b00001000: begin // Operação NOT
         result <= ~A;
         Flags[0] <= ( result == 0 ) ? 1 : 0 ;
         Flags[2] <= result[7];
         Flags[3] <= ~^(result);
       end
-      8'b00001000: begin // Operação NAND
+      8'b00001001: begin // Operação NAND
         result <= ~(A & B); 
         Flags[0] <= ( result == 0 ) ? 1 : 0 ;
         Flags[2] <= result[7];
         Flags[3] <= ~^(result);
       end
-      8'b00001001: begin // Operação NOR
+      8'b00001010: begin // Operação NOR
         result <= ~(A | B);
         Flags[0] <= ( result == 0 ) ? 1 : 0 ;
         Flags[2] <= result[7];
         Flags[3] <= ~^(result);
       end
-      8'b00001010: begin // Operação XNOR
+      8'b00001011: begin // Operação XNOR
         result <= ~(A ^ B); 
         Flags[0] <= ( result == 0 ) ? 1 : 0 ;
         Flags[2] <= result[7];
         Flags[3] <= ~^(result);
       end
-       8'b00001011: begin // Deslocamento de bit a esquerda
+       8'b00001100: begin // Deslocamento de bit a esquerda
         result <= shift_left_X; 
         Flags[0] <= ( result == 0 ) ? 1 : 0 ;
-         Flags[1] <= A[7];
+        Flags[1] <= A[7];
         Flags[2] <= result[7];
         Flags[3] <= ~^(result);
       end
-      8'b00001100: begin // Deslocamento de bit a direita
+      8'b00001101: begin // Deslocamento de bit a direita
         result <= shift_right_X; 
         Flags[0] <= ( result == 0 ) ? 1 : 0 ;
         Flags[1] <= A[0];
         Flags[2] <= result[7];
         Flags[3] <= ~^(result);
       end
-       8'b00001101: begin // Comparador de Bits
+       8'b00001111: begin // Comparador de Bits
         result[0] <= cmp_equal;   
         result[1] <= cmp_bigger; 
         result[2] <= cmp_smallest; 
@@ -134,7 +134,10 @@ module ALU ( input wire [7:0]A, input wire [7:0]B, input wire [7:0]Selector,
         Flags[1] <= cmp_bigger;
         Flags[2] <= cmp_smallest;
       end
-      
+      8'b10000000: begin // Operação MOV
+    	result <= A;
+    	Flags <= 8'b0;
+	  end
       default: begin
         result <= 8'b00000000;
     	Flags <= 8'b00000000;

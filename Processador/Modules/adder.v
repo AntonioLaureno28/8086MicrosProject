@@ -1,4 +1,23 @@
-`include "fulladder.v"
+`ifndef adder
+`define adder
+
+module half_adder (output wire Sum, Cout,
+                   input wire A, B);
+  xor #1 U1(Sum, A, B);
+  and #1 U2(Cout, A, B);
+endmodule
+
+
+module full_adder (output wire Sum, Cout,
+                   input wire A, B, Cin);
+  wire HA1_sum, HA1_Cout, HA2_Cout;
+
+  half_adder U1 (.Sum(HA1_sum), .Cout(HA1_Cout), .A(A), .B(B));
+  half_adder U2 (.Sum(Sum), .Cout(HA2_Cout), .A(HA1_sum), .B(Cin));
+
+  or #1 U3 (Cout, HA2_Cout, HA1_Cout);
+endmodule
+
 
 module adder ( output wire [7:0] Sum, output wire Cout,
               input wire [7:0] A, input wire [7:0] B );
@@ -13,4 +32,6 @@ module adder ( output wire [7:0] Sum, output wire Cout,
   full_adder f6 (.Sum(Sum[5]), .Cout(C6), .A(A[5]), .B(B[5]), .Cin(C5));
   full_adder f7 (.Sum(Sum[6]), .Cout(C7), .A(A[6]), .B(B[6]), .Cin(C6));
   full_adder f8 (.Sum(Sum[7]), .Cout(Cout), .A(A[7]), .B(B[7]),.Cin(C7));
+  
 endmodule
+`endif

@@ -1,5 +1,8 @@
 `include "And_gate.v"
-`include "fulladder.v"
+`include "adder.v" // Já inclui os módulos necessários
+
+`ifndef multiplier
+`define multiplier
 
 module adder_multiplier (
     output wire [15:0] Sum, 
@@ -39,7 +42,6 @@ module multiplier (
 
     genvar i, j;
 
- 
     generate
         for (i = 0; i < 8; i = i + 1) begin : product_gen
             for (j = 0; j < 8; j = j + 1) begin : and_gen
@@ -52,14 +54,12 @@ module multiplier (
         end
     endgenerate
 
-
     generate
         for (i = 0; i < 8; i = i + 1) begin : shift_gen
             assign shifted[i] = {product[i], {i{1'b0}}}; 
         end
     endgenerate
 
-    
     assign partial_sum[0] = shifted[0];
     generate
         for (i = 1; i < 8; i = i + 1) begin : sum_gen
@@ -73,3 +73,4 @@ module multiplier (
 
     assign Mult = partial_sum[7];
 endmodule
+`endif

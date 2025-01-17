@@ -1,9 +1,15 @@
+`ifndef full_adder
+`define full_adder
+
 module half_adder (output wire Sum, Cout,
                    input wire A, B);
   xor #1 U1(Sum, A, B);
   and #1 U2(Cout, A, B);
 endmodule
+`endif
 
+`ifndef full_adder
+`define full_adder
 
 module full_adder (output wire Sum, Cout,
                    input wire A, B, Cin);
@@ -14,3 +20,4 @@ module full_adder (output wire Sum, Cout,
 
   or #1 U3 (Cout, HA2_Cout, HA1_Cout);
 endmodule
+`endif
