@@ -6,8 +6,6 @@
 `include "shift_right.v"
 `include "comparator.v"
 
-
-
 module ALU #(parameter A = 8'b1, B = 8'b1)( input wire [7:0]A, input wire [7:0]B, input wire [7:0]Selector,
             input wire clk, output reg [7:0]X, output reg [7:0]Flags );
   wire [7:0] add_X, sub_X, shift_left_X, shift_right_X;

@@ -10,7 +10,5 @@ module subtractor ( input wire [7:0]A, input wire [7:0]B,
   
   adder A1 ( .A(A), .B(C_Comp), .Sum(Diff) );
   
- 
-  
 endmodule
 `endif

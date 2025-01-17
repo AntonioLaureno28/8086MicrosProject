@@ -1,6 +1,3 @@
-/*
-design.sv
-
 // Division 8bit
 
 module divider8bits(dividend,divisor,quo,rem);
@@ -61,35 +58,5 @@ module divider8bits(dividend,divisor,quo,rem);
     quo = a1;
     rem = p1;
     end
-  end
-endmodule
-*/
-
-/*
-testbench.v
-*/
-
-
-module division;
-  reg[7:0] q;
-  reg[7:0] m;
-  
-  wire [7:0] quo;
-  wire [7:0] rem;
-  
-  divider8bits uut (
-    .dividend(q),
-    .divisor(m),
-    .quo(quo),
-    .rem(rem)
-  );
-  
-  initial begin
-    q=8'b01001011; // 75
-    m=8'b00011001; // 25
-    
-    #100
-    
-    $display("quo: %b, rem: %b", quo, rem); // Expected output -> quo: 03, rem: 00
   end
 endmodule

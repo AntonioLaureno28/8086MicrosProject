@@ -1,4 +1,3 @@
-/*
 module remainder8bits(dividend,divisor,rem);
   
   input [7:0] dividend;
@@ -52,36 +51,4 @@ module remainder8bits(dividend,divisor,rem);
     rem = p1;
     end
   end
-endmodule
-*/
-
-module division;
-  reg [7:0] dividend;
-  reg [7:0] divisor;
-  wire [7:0] rem;
-
-  // Instância do módulo remainder8bits
-  remainder8bits uut (
-    .dividend(dividend),
-    .divisor(divisor),
-    .rem(rem)
-  );
-  
-  initial begin
-        
-        dividend = 8'b01001011; // 75
-        divisor = 8'b00011001; // 25
-        #10;
-        $display("Dividend: %b, Divisor: %b, Remainder: %b", dividend, divisor, rem); 
-
-        dividend = 8'b00001111; // 15
-        divisor = 8'b00000100; // 4
-        #10;
-        $display("Dividend: %b, Divisor: %b, Remainder: %b", dividend, divisor, rem);
-
-        dividend = 8'b11110001; // -15 (como complemento de 2)
-        divisor = 8'b00000100; // 4
-        #10;
-        $display("Dividend: %b, Divisor: %b, Remainder: %b", dividend, divisor, rem); 
-    end
 endmodule
