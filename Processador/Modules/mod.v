@@ -1,16 +1,10 @@
 /*
-design.sv
-
-// Division 8bit
-
-module divider8bits(dividend,divisor,quo,rem);
+module remainder8bits(dividend,divisor,rem);
   
   input [7:0] dividend;
   input [7:0] divisor;
-  output [7:0] quo;
   output [7:0] rem;
   
-  reg [7:0] quo = 0;
   reg [7:0] rem = 0;
   reg [7:0] a1, b1;
   reg [7:0] p1;
@@ -43,53 +37,51 @@ module divider8bits(dividend,divisor,quo,rem);
     end
     
     if ((dividend[7]==1) && (divisor[7]==0)) begin
-      quo = 0-a1;
       rem = 0-p1;
     end
       
     else if ((dividend[7]==0) && (divisor[7]==1)) begin
-      quo = 0-a1;
       rem = 0;
     end
     
     else if ((dividend[7]==1) && (divisor[7]==1)) begin
-      quo = a1;
       rem = 0-p1;
     end
     
     else begin
-    quo = a1;
     rem = p1;
     end
   end
 endmodule
 */
 
-/*
-testbench.v
-*/
-
-
 module division;
-  reg[7:0] q;
-  reg[7:0] m;
-  
-  wire [7:0] quo;
+  reg [7:0] dividend;
+  reg [7:0] divisor;
   wire [7:0] rem;
-  
-  divider8bits uut (
-    .dividend(q),
-    .divisor(m),
-    .quo(quo),
+
+  // Instância do módulo remainder8bits
+  remainder8bits uut (
+    .dividend(dividend),
+    .divisor(divisor),
     .rem(rem)
   );
   
   initial begin
-    q=8'b01001011; // 75
-    m=8'b00011001; // 25
-    
-    #100
-    
-    $display("quo: %b, rem: %b", quo, rem); // Expected output -> quo: 03, rem: 00
-  end
+        
+        dividend = 8'b01001011; // 75
+        divisor = 8'b00011001; // 25
+        #10;
+        $display("Dividend: %b, Divisor: %b, Remainder: %b", dividend, divisor, rem); 
+
+        dividend = 8'b00001111; // 15
+        divisor = 8'b00000100; // 4
+        #10;
+        $display("Dividend: %b, Divisor: %b, Remainder: %b", dividend, divisor, rem);
+
+        dividend = 8'b11110001; // -15 (como complemento de 2)
+        divisor = 8'b00000100; // 4
+        #10;
+        $display("Dividend: %b, Divisor: %b, Remainder: %b", dividend, divisor, rem); 
+    end
 endmodule
