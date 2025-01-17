@@ -87,11 +87,12 @@ module UC (
                     AND: alu_op = 8'b00000110;
                     OR: alu_op = 8'b00000111;
                     XOR: alu_op = 8'b00001000;
+                    NOT: alu_op = 8'b00001100;
                     NAND: alu_op = 8'b00001001;
                     NOR: alu_op = 8'b00001010;
                     XNOR: alu_op = 8'b00001011;
 
-                    CMP: alu_op = 8'b00001100;
+                    CMP: alu_op = 8'b00001111;
                     SHIFT_LEFT: alu_op = 8'b00001101;
                     SHIFT_RIGHT: alu_op = 8'b00001110;
                 endcase
