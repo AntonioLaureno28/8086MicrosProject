@@ -148,10 +148,6 @@ module ALU ( input wire [7:0]A, input wire [7:0]B, input wire [7:0]Selector,
         Flags[1] = cmp_bigger;
         Flags[2] = cmp_smallest;
       end
-      8'b10000000: begin // Operação MOV
-    	result = A;
-    	Flags = 8'b0;
-	  end
       default: begin
         result = 8'b00000000;
     	Flags = 8'b00000000;

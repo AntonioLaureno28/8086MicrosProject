@@ -108,13 +108,19 @@ module UC (
             end
 
             MOV_A: begin
+                pc_load = 1;
                 reg_load_a = 1;
-                alu_op = 8'b10000000;
+                alu_op = 8'b00000000;
             end
 
             MOV_B: begin 
+                pc_load = 1;
                 reg_load_b = 1;
-                alu_op = 8'b10000000;
+                alu_op = 8'b00000000;
+            end
+
+            JMP: begin
+                pc_load = 1;
             end
         endcase
     end

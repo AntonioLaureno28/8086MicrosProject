@@ -13,6 +13,7 @@ module program_counter (
             case (opcode)
                 8'b01111000: instruction_size = 2;  // Exemplo: Opcode para instrução com 1 operando
                 8'b10000000: instruction_size = 2;
+                8'b11000000: instruction_size = 2;
                 8'b10000001: instruction_size = 2;
                 8'b10000010: instruction_size = 2;
                 8'b10000100: instruction_size = 2;
