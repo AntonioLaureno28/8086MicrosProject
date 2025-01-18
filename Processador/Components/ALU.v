@@ -156,7 +156,5 @@ module ALU ( input wire [7:0]A, input wire [7:0]B, input wire [7:0]Selector,
    
     X = result;
    
-    
-
   end
 endmodule  

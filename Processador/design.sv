@@ -88,7 +88,7 @@ module CPU (
             Op1_dp = Op1_ram; // Carrega o operando 1
             Op2_dp = Op2_ram; // Carrega o operando 2
         end
-      	$display(" Op1_ram: %b Op2_ram: %b | Op1_dp: %b Op2_dp: %b", Op1_ram, Op2_ram, Op1_dp, Op2_dp);
+      	//$display(" Op1_ram: %b Op2_ram: %b | Op1_dp: %b Op2_dp: %b", Op1_ram, Op2_ram, Op1_dp, Op2_dp);
     end
 
     // Exibição para debug
