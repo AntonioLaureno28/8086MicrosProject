@@ -8,9 +8,8 @@
 `include "comparator.v"
 
 
-
 module ALU ( input wire [7:0]A, input wire [7:0]B, input wire [7:0]Selector,
-            input wire clk, output reg [7:0]X, output reg [7:0]Flags );
+            output reg [7:0]X, output reg [7:0]Flags );
   wire [7:0] add_X, sub_X, shift_left_X, shift_right_X;
   wire [15:0] mult_X;
   wire [7:0] div_quo, div_rem;
@@ -18,21 +17,22 @@ module ALU ( input wire [7:0]A, input wire [7:0]B, input wire [7:0]Selector,
   wire cmp_bigger, cmp_equal, cmp_smallest;
   reg [7:0] result;
   
+  
   adder A1 ( .Sum(add_X), .Cout(add_cout), .A(A), .B(B) );
   subtractor S1 ( .A(A), .B(B), .Diff(sub_X), .Cout(sub_cout));
   multiplier M1 ( .A(A), .B(B), .Mult(mult_X));
   divider8bits D1 (.dividend(A), .divisor(B), .quo(div_quo), .rem(div_rem));
   shiftLeft SL1 (.A(A), .shift(B[2:0]), .X(shift_left_X));  
   shiftRight SR1 (.A(A), .shift(B[2:0]), .X(shift_right_X));
-  Comparator CMP1 (.A(A), .B(B), .clk(clk), .bigger(cmp_bigger), .equal(cmp_equal), .smallest(cmp_smallest));
+  Comparator CMP1 (.A(A), .B(B), .bigger(cmp_bigger), .equal(cmp_equal), .smallest(cmp_smallest));
 
-  always @(posedge clk) begin
+ /* always @(posedge clk) begin
   $display("Selector: %b, A: %b, B: %b", Selector, A, B);
 
-  end
+  end*/
   
-  always @(posedge clk) begin
-    $display("ALU Inputs - Selector: %b, A: %b, B: %b", Selector, A, B);
+  always @(*) begin
+    
   
     result = 8'b00000000;
     Flags = 8'b00000000;
@@ -58,7 +58,6 @@ module ALU ( input wire [7:0]A, input wire [7:0]B, input wire [7:0]Selector,
         Flags[6] = ((A[7] != B[7]) && (A[7] == result[7]));
       end
       8'b00000011: begin // Operação de Multiplicação
-        $display("A: %b, B: %b, mult_X: %b", A, B, mult_X);
         result = mult_X[7:0];
         Flags[0] = ( result == 0 ) ? 1 : 0 ;
         Flags[1] = (mult_X[15:8] != 0) ? 1 : 0;
@@ -162,8 +161,9 @@ module ALU ( input wire [7:0]A, input wire [7:0]B, input wire [7:0]Selector,
     	Flags = 8'b00000000;
       end
     endcase
-    $display("result: %b", result);
-    X <= result;
+    //$display("ALU-result: %b", result);
+    X = result;
+   
     
 
   end

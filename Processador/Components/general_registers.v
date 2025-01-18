@@ -26,16 +26,19 @@ module x86_register_file (
             registers[1] <= 8'b0; // BX
             registers[2] <= 8'b0; // CX
             registers[3] <= 8'b0; // DX
-        end 
-      	else if (we1) begin   
+        end
+      else begin 
+      	if (we1) begin   
           registers[0] <= write_data1;
         end
-        else if (we2) begin   
+        if (we2) begin   
           registers[1] <= write_data2;
         end
-        else if (we3) begin   
+        if (we3) begin   
           registers[2] <= write_data3;
         end
+      end
+      	
     end
 
     // Leitura

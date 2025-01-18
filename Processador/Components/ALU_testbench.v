@@ -1,119 +1,77 @@
-module test_ALU();
+`timescale 1ns/1ps
+
+module ALU_tb;
+
+  // Entradas
   reg [7:0] A, B, Selector;
-  reg clk;
+
+  // Saídas
   wire [7:0] X, Flags;
 
-  // Instanciação da ALU
+  // Instância da ALU
   ALU uut (
     .A(A),
     .B(B),
     .Selector(Selector),
-    .clk(clk),
     .X(X),
     .Flags(Flags)
   );
 
-  // Processo inicial
+  // Inicialização e estímulos
   initial begin
-    // Teste de Soma
-    A = 8'b00000101; // 5
-    B = 8'b00000011; // 3
-    Selector = 8'b00000001; // Soma
-    clk = 0;
+    // Monitorar sinais
+    $monitor("Time: %0d | A: %b (%d), B: %b (%d), Selector: %b | X: %b (%d), Flags: %b", 
+              $time, A, A, B, B, Selector, X, X, Flags);
 
-    #10; // Aguarde a propagação dos sinais
-    clk = 1;
-
-    #10; // Aguarde mais tempo antes de verificar
-    $display("%d + %d = %d, Flags: %b", A, B, X, Flags);
-
-    // Teste de Subtração
-    A = 8'b00000101; // 5
-    B = 8'b00000011; // 3
-    Selector = 8'b00000010; // Subtração
-    clk = 0;
-
-    #10;
-    clk = 1;
-
-    #10;
-    $display("%d - %d = %d, Flags: %b", A, B, X, Flags);
-
-    // Teste de Multiplicação
-    A = 8'b00000010; // 2
-    B = 8'b00000100; // 4
-    Selector = 8'b00000011; // Multiplicação
-    clk = 0;
-
-    #10;
-    clk = 1;
-
-    #10;
-    $display("%d x %d = %d, Flags: %b", A, B, X, Flags);
-
-    // Teste de Divisão
-    A = 8'b00000110; // 6
+    // Teste 1: Soma
+    A = 8'b00000011; // 3
     B = 8'b00000010; // 2
-    Selector = 8'b00000100; // Divisão
-    clk = 0;
-
+    Selector = 8'b00000001;
     #10;
-    clk = 1;
 
-    #10;
-    $display("%d / %d = %d, Flags: %b", A, B, X, Flags);
-    
-    // Teste de Divisão
-    A = 8'b00000110; // 6
+    // Teste 2: Subtração
+    A = 8'b00000100; // 4
     B = 8'b00000010; // 2
-    Selector = 8'b00000101; // Resto
-    clk = 0;
-
+    Selector = 8'b00000010;
     #10;
-    clk = 1;
 
+    // Teste 3: Multiplicação
+    A = 8'b00001010; // 3
+    B = 8'b00001111; // 2
+    Selector = 8'b00000011;
     #10;
-    $display("%d %% %d = %d, Flags: %b", A, B, X, Flags);
 
-
-    // Teste de AND
-    A = 8'b11001100; // 204
-    B = 8'b10101010; // 170
-    Selector = 8'b00000110; // AND
-    clk = 0;
-
+    // Teste 4: Divisão (sem erro)
+    A = 8'b00001000; // 8
+    B = 8'b00000010; // 2
+    Selector = 8'b00000100;
     #10;
-    clk = 1;
 
+    // Teste 5: Divisão por Zero
+    A = 8'b00001000; // 8
+    B = 8'b00000000; // 0
+    Selector = 8'b00000100;
     #10;
-    $display("%b AND %b = %b, Flags: %b", A, B, X, Flags);
 
-    // Teste de OR
-    A = 8'b11001100; // 204
-    B = 8'b10101010; // 170
-    Selector = 8'b00000111; // OR
-    clk = 0;
-
+    // Teste 6: Shift Left
+    A = 8'b00000001; // 1
+    B = 8'b00000010; // Shift de 2 bits
+    Selector = 8'b00001101;
     #10;
-    clk = 1;
 
+    // Teste 7: Shift Right
+    A = 8'b00001000; // 8
+    B = 8'b00000010; // Shift de 2 bits
+    Selector = 8'b00001110;
     #10;
-    $display("%b OR %b = %b, Flags: %b", A, B, X, Flags);
 
-    // Teste de XOR
-    A = 8'b11001100; // 204
-    B = 8'b10101010; // 170
-    Selector = 8'b00001000; // XOR
-    clk = 0;
-
+    // Teste 10: Comparação (A e B)
+    A = 8'b00000101; // 3
+    B = 8'b00000011; // 5
+    Selector = 8'b00001111;
     #10;
-    clk = 1;
-
-    #10;
-    $display("%b XOR %b = %b, Flags: %b", A, B, X, Flags);
 
     // Finalizar simulação
     $stop;
   end
-
 endmodule

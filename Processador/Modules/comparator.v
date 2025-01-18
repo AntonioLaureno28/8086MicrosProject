@@ -4,7 +4,6 @@
 module Comparator (
     input wire [7:0] A, 
     input wire [7:0] B, 
-    input wire clk, 
     output reg bigger, 
     output reg equal, 
     output reg smallest
@@ -21,7 +20,7 @@ module Comparator (
 
   reg stop; // Variável de controle para sair do loop
 
-  always @(posedge clk) begin
+  always @(*) begin
      equal <= 1;
      bigger <= 0;
      smallest <= 0;

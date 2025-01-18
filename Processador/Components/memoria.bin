@@ -1,5 +1,5 @@
 00000001 // ADD AX, BX
-00000000 // Operando 1: AX
+00000001 // Operando 1: AX
 00000001 // Operando 2: BX
 00000010 // SUB AX, BX
 00000000 // Operando 1: AX
@@ -10,4 +10,6 @@
 00000100 // DIV AX, BX
 00000000 // Operando 1: AX
 00000001 // Operando 2: BX
-
+00000101 // MOD AX, BX
+00000000 // Operando 1: AX
+00000001 // Operando 2: BX

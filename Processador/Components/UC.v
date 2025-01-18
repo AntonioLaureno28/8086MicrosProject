@@ -15,11 +15,13 @@ module UC (
               SHIFT_LEFT = 8'd21, SHIFT_RIGHT = 8'd22,
               RET = 8'd23, GOTO = 8'd24, JZ = 8'd25, JNZ = 8'd26;
 
-    always @(posedge clock or negedge reset) begin
-        if (!reset)
+  	always @(posedge clock or posedge reset) begin
+      	//$display("UC: IR- %b   ALUOP- %b", IR, alu_op);
+        if (reset)
             current_state <= START;
         else
             current_state <= next_state;
+      		$display("UC: State Transition - Current State: %d, Next State: %d, IR: %b, alu: %b", current_state, next_state, IR, alu_op);
     end
 
    
@@ -65,7 +67,7 @@ module UC (
 
  
     always @(current_state) begin
-        ir_load = 0;
+       	ir_load = 0;
         reg_load_a = 0;
         reg_load_b = 0;
         reg_load_c = 0;
@@ -75,13 +77,18 @@ module UC (
         case (current_state)
             FETCH: begin 
               ir_load = 1;
-              pc_load = 0; 
+              pc_load = 0;
             end
+          
+          	DECODE: begin
+             
+            end 
 
             ADD, SUB, MUL, DIV, MOD, AND, OR, XOR, NAND, NOR, XNOR, CMP, SHIFT_LEFT, SHIFT_RIGHT: begin
               	pc_load = 1;
                 reg_load_a = 1;  
-                reg_load_b = 1; 
+                reg_load_b = 1;
+              	reg_load_c = 1;
                 case (current_state)
                     ADD: alu_op = 8'b00000001;
                     SUB: alu_op = 8'b00000010;
