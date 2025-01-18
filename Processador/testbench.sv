@@ -42,10 +42,9 @@ module CPU_testbench;
         
 
         // Monitora as saídas da ALU
-        $display("Clock Cycle | ALU Output | Flags");
         forever begin
             @(posedge clk); // Espera pelo próximo ciclo de clock
-            $display("%d          | %b      | %b", $time, alu_out, flags);
+          $display("ALU Output: %b", alu_out);  
         end
     end
 

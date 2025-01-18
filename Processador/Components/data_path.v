@@ -48,11 +48,4 @@ module datapath (
 
     // Resultado final
     assign result = reg_result;
-  
-  	initial begin
-        $monitor("Time: %0t | op1: %b | op2: %b | Result: %b | Flags: %b", 
-                  $time, reg_operando1, reg_operando2, alu_out, flags);
-    end
-
- 
 endmodule
