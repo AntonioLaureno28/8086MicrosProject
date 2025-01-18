@@ -10,10 +10,8 @@ module UC (
               ADD = 8'd3, SUB = 8'd4, MUL = 8'd5, DIV = 8'd6, MOD = 8'd7,
               AND = 8'd8, OR = 8'd9, XOR = 8'd10, NOT = 8'd11,
               NAND = 8'd12, NOR = 8'd13, XNOR = 8'd14,
-              JNZ = 8'd15, MOV_A = 8'd16, MOV_B = 8'd17,
-              CMP = 8'd18, JMP = 8'd19, CALL = 8'd20, 
-              SHIFT_LEFT = 8'd21, SHIFT_RIGHT = 8'd22,
-              RET = 8'd23, GOTO = 8'd24, JZ = 8'd25;
+              CMP = 8'd15, SHIFT_LEFT = 8'd16, SHIFT_RIGHT = 8'd17
+              
 
   	always @(posedge clock or posedge reset) begin
       	//$display("UC: IR- %b   ALUOP- %b", IR, alu_op);
@@ -48,14 +46,6 @@ module UC (
                     8'b00111100: next_state = SHIFT_LEFT;
                     8'b00111101: next_state = SHIFT_RIGHT;
                     8'b00011111: next_state = CMP;
-                    8'b10000000: next_state = MOV_A;
-                    8'b11000000: next_state = MOV_B;
-                    8'b10000001: next_state = JMP;
-                    8'b10000010: next_state = CALL;
-                    8'b10000011: next_state = RET;
-                    8'b10000100: next_state = GOTO;
-                    8'b10000101: next_state = JZ;
-                    8'b10000111: next_state = JNZ;
                     default: next_state = START;
                 endcase
 
@@ -107,21 +97,6 @@ module UC (
                 endcase
             end
 
-            MOV_A: begin
-                pc_load = 1;
-                reg_load_a = 1;
-                alu_op = 8'b00000000;
-            end
-
-            MOV_B: begin 
-                pc_load = 1;
-                reg_load_b = 1;
-                alu_op = 8'b00000000;
-            end
-
-            JMP: begin
-                pc_load = 1;
-            end
         endcase
     end
 endmodule

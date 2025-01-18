@@ -129,7 +129,7 @@ int main()
     }
 
     const char* reservadas[] = {
-    "ADD", "SUB", "MUL", "DIV", "AND", "OR", "NOT", "XOR", "NAND", "NOR", "XNOR", "SHL", "SHR", "CMP", "MOV_A", "MOV_B", "GOTO", "JMP", "CALL", "RET", "JZ", "JZN"
+    "ADD", "SUB", "MUL", "DIV", "AND", "OR", "NOT", "XOR", "NAND", "NOR", "XNOR", "SHL", "SHR", "CMP"
     };
 
     int num_reservadas = sizeof(reservadas) / sizeof(reservadas[0]);
@@ -171,14 +171,6 @@ int main()
         else if(strcmp(line, "SHL") == 0) fprintf(output_file, "00111100\n");  
         else if(strcmp(line, "SHR") == 0) fprintf(output_file, "00111101\n");
         else if(strcmp(line, "CMP") == 0) fprintf(output_file, "00011111\n");
-        else if(strcmp(line, "MOV_A") == 0) fprintf(output_file, "10000000\n");
-        else if(strcmp(line, "MOV_B") == 0) fprintf(output_file, "11000000\n");
-        else if(strcmp(line, "JMP") == 0) fprintf(output_file, "10000001\n"); 
-        else if(strcmp(line, "CALL") == 0) fprintf(output_file, "10000010\n");
-        else if(strcmp(line, "RET") == 0) fprintf(output_file, "10000011\n");
-        else if(strcmp(line, "GOTO") == 0) fprintf(output_file, "10000100\n");
-        else if(strcmp(line, "JZ") == 0) fprintf(output_file, "10000101\n"); 
-        else if(strcmp(line, "JNZ") == 0) fprintf(output_file, "10000111\n"); 
         // A linha possui o prefixo 0x
         else if (strncmp(line, "0x", 2) == 0) { 
             converter_hexa_para_binario(line, binario);
