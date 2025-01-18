@@ -1,8 +1,13 @@
-00000001  // Opcode para operação 1
-00000010  // Opcode para operação 2
-00000011  // Opcode para operação 3
-00000100  // Opcode para operação 4
-00000101  // Opcode para operação 5
-11111111  // Operando especial (exemplo: HALT)
-10101010  // Operando arbitrário
-01010101  // Outro operando arbitrário
+00000001 // ADD AX, BX
+00000000 // Operando 1: AX
+00000001 // Operando 2: BX
+00000010 // SUB AX, BX
+00000000 // Operando 1: AX
+00000001 // Operando 2: BX
+00000011 // MUL AX, BX
+00000000 // Operando 1: AX
+00000001 // Operando 2: BX
+00000100 // DIV AX, BX
+00000000 // Operando 1: AX
+00000001 // Operando 2: BX
+

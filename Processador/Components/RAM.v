@@ -12,7 +12,7 @@ module RAM (
 
     // Carrega os dados no início da simulação
     initial begin
-      $readmemb("memoria.bin", Ram, 0, 7); 
+      $readmemb("memoria.bin", Ram, 0, 11); 
     end
 
     always @(posedge clk) begin

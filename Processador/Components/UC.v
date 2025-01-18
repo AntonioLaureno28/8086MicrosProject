@@ -73,8 +73,10 @@ module UC (
         alu_op = 8'b0;
 
         case (current_state)
-            FETCH: ir_load = 1;
-          		pc_load = 0;
+            FETCH: begin 
+              ir_load = 1;
+              pc_load = 0; 
+            end
 
             ADD, SUB, MUL, DIV, MOD, AND, OR, XOR, NAND, NOR, XNOR, CMP, SHIFT_LEFT, SHIFT_RIGHT: begin
               	pc_load = 1;

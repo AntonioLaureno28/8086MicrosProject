@@ -23,23 +23,26 @@ module CPU (
     wire [7:0] reg_out1, reg_out2; // Dados dos registradores
     wire [7:0] mem_data;       // Dados da memória
   	wire PC_LOAD;
-  	wire [7:0]Op1, [7:0]Op2;
+   	reg [7:0] IR;              // Registrador de instrução
+  	wire [7:0]Op1_ram, Op2_ram;
+  	logic [7:0]Op1_dp, Op2_dp;
+
   	
 
     // UC - Sinais de Controle
-    wire ir_load, reg_load, mem_write, mem_read;
+    wire ir_load, reg_load_a, reg_load_b, reg_load_c, mem_write, mem_read;
     wire [7:0] alu_op;
 
     // Contador de programa
-    reg [7:0] pc;
+  	wire [5:0] pc;
 
     // Instanciação dos módulos
-  	program_counter_register Pc (
+  	program_counter Pc (
       	.clock(clk),
       	.reset(rst),
       	.pc_load(PC_LOAD),
       	.opcode(instruction),
-      	.pc(pc),
+      	.pc(pc)
     );
   
     UC control_unit (
@@ -47,24 +50,24 @@ module CPU (
         .reset(rst),
         .IR(instruction),      // Código de operação
         .ir_load(ir_load),
-        .reg_load_a(reg_load),
-        .reg_load_b(reg_load),
-      	.reg_load_c(reg_load),
+      	.reg_load_a(reg_load_a),
+      	.reg_load_b(reg_load_b),
+      	.reg_load_c(reg_load_c),
       	.pc_load(PC_LOAD),
-      	.alu_op(alu_op),
+      	.alu_op(alu_op)
     );
   
-  	data_path dataPath(
+  	datapath dataPath(
       .clock(clk),
       .reset(rst),
-      .Operando1(),
-      .Operando2(),
-      .alu_op(),
-      .reg_load_a(),
-      .reg_load_b(),
-      .reg_load_c(),
-      .result(),
-      .flags(),
+      .Operando1(Op1_dp),
+      .Operando2(Op2_dp),
+      .alu_op(alu_op),
+      .reg_load_a(reg_load_a),
+      .reg_load_b(reg_load_b),
+      .reg_load_c(reg_load_c),
+      .result(alu_result),
+      .flags(alu_flags)
   	);
   
   
@@ -73,9 +76,9 @@ module CPU (
       .Addr(pc),
       .we(ram_we),
       .clk(clk),
-      .opcode(instruction),
-      .Operando1(Op1),
-      .Operando2(Op2),
+      .Opcode(instruction),
+      .Operando1(Op1_ram),
+      .Operando2(Op2_ram)
     );
   
   	
@@ -84,6 +87,8 @@ module CPU (
             IR <= 8'b0; // Reseta o registrador de instrução
         end else if (ir_load) begin
             IR <= instruction; // Carrega a instrução da RAM no registrador IR
+          	Op1_dp <= Op1_ram;
+            Op2_dp <= Op2_ram;
         end
     end
   	
@@ -92,7 +97,6 @@ module CPU (
     // Atualiza o contador de programa
 
     // Saídas da CPU
-    assign pc_out = pc;
     assign alu_out = alu_result;
     assign flags = alu_flags;
 

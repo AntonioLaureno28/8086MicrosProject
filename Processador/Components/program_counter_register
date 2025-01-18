@@ -29,8 +29,6 @@ module program_counter (
         if (reset)
             pc <= 6'b0;  // Reseta o contador para 0
         else if (pc_load)
-            pc <= pc;    // Mantém o valor atual do PC quando pc_load está ativo
-        else
-            pc <= pc + instruction_size(opcode);  // Incrementa baseado no tamanho da instrução
+          	pc <= pc + instruction_size(opcode); 
     end
 endmodule
