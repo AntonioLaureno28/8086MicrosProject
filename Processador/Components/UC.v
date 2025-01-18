@@ -1,7 +1,7 @@
 module UC (
     input clock, reset,
-    input [31:0] IR,
-    output reg ir_load, reg_load_a, reg_load_b, reg_load_c,
+  	input [7:0] IR,
+    output reg ir_load, reg_load_a, reg_load_b, reg_load_c, pc_load,
     output reg [7:0] alu_op
 );
     reg [7:0] current_state, next_state;
@@ -29,7 +29,7 @@ module UC (
             FETCH: next_state = DECODE;
 
             DECODE:
-                case (IR[31:23])
+                case (IR)
                     8'b00000001: next_state = ADD;
                     8'b00000010: next_state = SUB;
                     8'b00000011: next_state = MUL;
@@ -45,7 +45,7 @@ module UC (
                     8'b00111100: next_state = SHIFT_LEFT;
                     8'b00111101: next_state = SHIFT_RIGHT;
                     8'b00011111: next_state = CMP;
-                    8'b10000000: next_state = MOV;
+                    // 8'b10000000: next_state = MOV;
                     8'b10000001: next_state = JMP;
                     8'b10000010: next_state = CALL;
                     8'b10000011: next_state = RET;
@@ -55,8 +55,8 @@ module UC (
                     default: next_state = START;
                 endcase
 
-            MOV: if(IR[22:21] == 2'b00) next_state = MOV_A;
-                 else if (IR[22:21] == 2'b01) next_state = MOV_B;
+            //MOV: if(IR[22:21] == 2'b00) next_state = MOV_A;
+                 //else if (IR[22:21] == 2'b01) next_state = MOV_B;
 
             
             default: next_state = FETCH;
@@ -69,12 +69,15 @@ module UC (
         reg_load_a = 0;
         reg_load_b = 0;
         reg_load_c = 0;
+      	pc_load = 0;
         alu_op = 8'b0;
 
         case (current_state)
             FETCH: ir_load = 1;
+          		pc_load = 0;
 
             ADD, SUB, MUL, DIV, MOD, AND, OR, XOR, NAND, NOR, XNOR, CMP, SHIFT_LEFT, SHIFT_RIGHT: begin
+              	pc_load = 1;
                 reg_load_a = 1;  
                 reg_load_b = 1; 
                 case (current_state)
@@ -87,26 +90,25 @@ module UC (
                     AND: alu_op = 8'b00000110;
                     OR: alu_op = 8'b00000111;
                     XOR: alu_op = 8'b00001000;
-                    NOT: alu_op = 8'b00001100;
                     NAND: alu_op = 8'b00001001;
                     NOR: alu_op = 8'b00001010;
                     XNOR: alu_op = 8'b00001011;
 
-                    CMP: alu_op = 8'b00001111;
+                    CMP: alu_op = 8'b00001100;
                     SHIFT_LEFT: alu_op = 8'b00001101;
                     SHIFT_RIGHT: alu_op = 8'b00001110;
                 endcase
             end
 
-            MOV_A: begin
-                reg_load_a = 1;
-                alu_op = 8'b10000000;
-            end
+            //MOV_A: begin
+                //reg_load_a = 1;
+                //alu_op = 8'b10000000;
+            //end
 
-            MOV_B: begin 
-                reg_load_b = 1;
-                alu_op = 8'b10000000;
-            end
+            //MOV_B: begin 
+                //reg_load_b = 1;
+                //alu_op = 8'b10000000;
+            //end
         endcase
     end
 endmodule
