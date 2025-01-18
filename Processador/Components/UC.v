@@ -10,7 +10,7 @@ module UC (
               ADD = 8'd3, SUB = 8'd4, MUL = 8'd5, DIV = 8'd6, MOD = 8'd7,
               AND = 8'd8, OR = 8'd9, XOR = 8'd10, NOT = 8'd11,
               NAND = 8'd12, NOR = 8'd13, XNOR = 8'd14,
-              CMP = 8'd15, SHIFT_LEFT = 8'd16, SHIFT_RIGHT = 8'd17
+              CMP = 8'd15, SHIFT_LEFT = 8'd16, SHIFT_RIGHT = 8'd17;
               
 
   	always @(posedge clock or posedge reset) begin
