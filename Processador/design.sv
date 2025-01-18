@@ -19,7 +19,7 @@ module CPU (
     wire [7:0] alu_flags;          // Flags da ALU
     wire [7:0] reg_out1, reg_out2; // Dados dos registradores
     wire [7:0] mem_data;           // Dados da memória
-    wire PC_LOAD;                  // Sinal para carregar o PC
+    wire pc_load_in, pc_load_out;                  // Sinal para carregar o PC
     reg [7:0] IR;                  // Registrador de instrução
     wire [7:0] Op1_ram, Op2_ram;   // Operandos da RAM
     reg [7:0] Op1_dp, Op2_dp;      // Operandos para o datapath
@@ -35,7 +35,7 @@ module CPU (
     program_counter Pc (
         .clock(clk),
         .reset(rst),
-        .pc_load(PC_LOAD),
+        .pc_load(pc_load_in),
         .opcode(instruction),
         .pc(pc)
     );
@@ -48,7 +48,7 @@ module CPU (
         .reg_load_a(reg_load_a),
         .reg_load_b(reg_load_b),
         .reg_load_c(reg_load_c),
-        .pc_load(PC_LOAD),
+      	.pc_load(pc_load_out),
         .alu_op(alu_op)
     );
 
@@ -74,6 +74,8 @@ module CPU (
         .Operando1(Op1_ram),
         .Operando2(Op2_ram)
     );
+  
+  	assign pc_load_in = pc_load_out;
 
     // Registrador de instrução (IR) e carga de operandos
     always @(posedge clk or posedge rst) begin
@@ -85,13 +87,13 @@ module CPU (
             IR <= instruction; // Carrega a instrução no registrador IR
             Op1_dp = Op1_ram; // Carrega o operando 1
             Op2_dp = Op2_ram; // Carrega o operando 2
-          	//$display("IR loaded: %b", IR);
         end
+      	$display(" Op1_ram: %b Op2_ram: %b | Op1_dp: %b Op2_dp: %b", Op1_ram, Op2_ram, Op1_dp, Op2_dp);
     end
 
     // Exibição para debug
     always @(posedge clk) begin
-    	//$display("instruction: %b, IR: %b, ir_load: %b", instruction, IR, ir_load);
+      //$display("pc load in: %d, pc load out: %d");
     end
 
     // Saídas da CPU

@@ -2,11 +2,11 @@
 00000001 // Operando 1: AX
 00000001 // Operando 2: BX
 00000010 // SUB AX, BX
-00000000 // Operando 1: AX
-00000001 // Operando 2: BX
+00000001 // Operando 1: AX
+00000000 // Operando 2: BX
 00000011 // MUL AX, BX
-00000000 // Operando 1: AX
-00000001 // Operando 2: BX
+00000010 // Operando 1: AX
+00000010 // Operando 2: BX
 00000100 // DIV AX, BX
 00000000 // Operando 1: AX
 00000001 // Operando 2: BX

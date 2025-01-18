@@ -10,10 +10,10 @@ module UC (
               ADD = 8'd3, SUB = 8'd4, MUL = 8'd5, DIV = 8'd6, MOD = 8'd7,
               AND = 8'd8, OR = 8'd9, XOR = 8'd10, NOT = 8'd11,
               NAND = 8'd12, NOR = 8'd13, XNOR = 8'd14,
-              MOV = 8'd15, MOV_A = 8'd16, MOV_B = 8'd17,
+              JNZ = 8'd15, MOV_A = 8'd16, MOV_B = 8'd17,
               CMP = 8'd18, JMP = 8'd19, CALL = 8'd20, 
               SHIFT_LEFT = 8'd21, SHIFT_RIGHT = 8'd22,
-              RET = 8'd23, GOTO = 8'd24, JZ = 8'd25, JNZ = 8'd26;
+              RET = 8'd23, GOTO = 8'd24, JZ = 8'd25;
 
   	always @(posedge clock or posedge reset) begin
       	//$display("UC: IR- %b   ALUOP- %b", IR, alu_op);
@@ -21,7 +21,8 @@ module UC (
             current_state <= START;
         else
             current_state <= next_state;
-      		$display("UC: State Transition - Current State: %d, Next State: %d, IR: %b, alu: %b", current_state, next_state, IR, alu_op);
+      		//$display("UC: State Transition - Current State: %d, Next State: %d, IR: %b, alu: %b", current_state, next_state, IR, alu_op);
+      $display("UC: State Transition - Current State: %d, pc_load: %b", current_state, pc_load);
     end
 
    
@@ -47,7 +48,8 @@ module UC (
                     8'b00111100: next_state = SHIFT_LEFT;
                     8'b00111101: next_state = SHIFT_RIGHT;
                     8'b00011111: next_state = CMP;
-                    // 8'b10000000: next_state = MOV;
+                    8'b10000000: next_state = MOV_A;
+                    8'b11000000: next_state = MOV_B;
                     8'b10000001: next_state = JMP;
                     8'b10000010: next_state = CALL;
                     8'b10000011: next_state = RET;
@@ -56,9 +58,6 @@ module UC (
                     8'b10000111: next_state = JNZ;
                     default: next_state = START;
                 endcase
-
-            //MOV: if(IR[22:21] == 2'b00) next_state = MOV_A;
-                 //else if (IR[22:21] == 2'b01) next_state = MOV_B;
 
             
             default: next_state = FETCH;
@@ -81,13 +80,12 @@ module UC (
             end
           
           	DECODE: begin
-             
+              reg_load_a = 1;  
+              reg_load_b = 1;
             end 
 
             ADD, SUB, MUL, DIV, MOD, AND, OR, XOR, NAND, NOR, XNOR, CMP, SHIFT_LEFT, SHIFT_RIGHT: begin
               	pc_load = 1;
-                reg_load_a = 1;  
-                reg_load_b = 1;
               	reg_load_c = 1;
                 case (current_state)
                     ADD: alu_op = 8'b00000001;
@@ -109,15 +107,15 @@ module UC (
                 endcase
             end
 
-            //MOV_A: begin
-                //reg_load_a = 1;
-                //alu_op = 8'b10000000;
-            //end
+            MOV_A: begin
+                reg_load_a = 1;
+                alu_op = 8'b10000000;
+            end
 
-            //MOV_B: begin 
-                //reg_load_b = 1;
-                //alu_op = 8'b10000000;
-            //end
+            MOV_B: begin 
+                reg_load_b = 1;
+                alu_op = 8'b10000000;
+            end
         endcase
     end
 endmodule

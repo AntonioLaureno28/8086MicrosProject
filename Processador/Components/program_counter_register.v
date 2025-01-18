@@ -26,6 +26,7 @@ module program_counter (
 
     // Atualização do Program Counter
     always @(posedge clock or posedge reset) begin
+      $display("opcode: %b, pcload:%d, pc:%b",opcode, pc_load, pc);
         if (reset)
             pc <= 6'b0;  // Reseta o contador para 0
         else if (pc_load)

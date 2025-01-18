@@ -26,10 +26,6 @@ module ALU ( input wire [7:0]A, input wire [7:0]B, input wire [7:0]Selector,
   shiftRight SR1 (.A(A), .shift(B[2:0]), .X(shift_right_X));
   Comparator CMP1 (.A(A), .B(B), .bigger(cmp_bigger), .equal(cmp_equal), .smallest(cmp_smallest));
 
- /* always @(posedge clk) begin
-  $display("Selector: %b, A: %b, B: %b", Selector, A, B);
-
-  end*/
   
   always @(*) begin
     
@@ -161,7 +157,7 @@ module ALU ( input wire [7:0]A, input wire [7:0]B, input wire [7:0]Selector,
     	Flags = 8'b00000000;
       end
     endcase
-    //$display("ALU-result: %b", result);
+   
     X = result;
    
     

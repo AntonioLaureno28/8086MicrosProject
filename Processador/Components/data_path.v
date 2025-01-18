@@ -39,15 +39,20 @@ module datapath (
 
     // ALU
     ALU alu_unit (
-        .A(Operando1),  // Operando 1 tentar usar operandos dos registradores
-        .B(Operando2),  // Operando 2
+        .A(reg_operando1),  // Operando 1 tentar usar operandos dos registradores
+        .B(reg_operando2),  // Operando 2
         .Selector(alu_op),  // Código da operação
-        .clk(clock),
         .X(alu_out),        // Resultado da operação
         .Flags(flags)       // Flags
     );
 
     // Resultado final
-    assign result = alu_out;
+    assign result = reg_result;
+  
+  	initial begin
+        $monitor("Time: %0t | op1: %b | op2: %b | Result: %b | Flags: %b", 
+                  $time, reg_operando1, reg_operando2, alu_out, flags);
+    end
 
+ 
 endmodule
